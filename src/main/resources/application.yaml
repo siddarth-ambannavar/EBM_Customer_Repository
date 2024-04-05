@@ -4,6 +4,14 @@ spring:
     username: postgres
     password: pvsEbmDb24$
     driver-class-name: org.postgresql.Driver
-
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 server:
   port: 8082

@@ -1,9 +1,25 @@
 spring:
+  application:
+    name: CustomerService
   datasource:
     url: jdbc:postgresql://electricity-billing-db.cxcg228yy6a8.ap-south-1.rds.amazonaws.com:5432/ebm_db
     username: postgres
     password: pvsEbmDb24$
     driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
 
 server:
   port: 8082
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+

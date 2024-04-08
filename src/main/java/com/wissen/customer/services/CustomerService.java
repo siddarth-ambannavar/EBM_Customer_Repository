@@ -30,8 +30,12 @@ public class CustomerService implements UserDetailsService {
         return customerRepository.findByPhoneNumber(phoneNumber).orElseThrow();
     }
 
-    public List<Customer> getCustomers() {
-        return customerRepository.findAll();
+    public boolean isCustomerIdExists(Integer customerId) {
+        return customerRepository.existsById(customerId);
+    }
+
+    public boolean isCustomerPhoneNumberExists(String phoneNumber) {
+        return customerRepository.findByPhoneNumber(phoneNumber).isPresent();
     }
 
     public Customer addCustomer(Customer customer) {

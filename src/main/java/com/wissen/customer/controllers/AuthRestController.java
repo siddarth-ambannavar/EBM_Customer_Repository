@@ -1,6 +1,9 @@
 package com.wissen.customer.Controllers;
 
+import com.wissen.customer.CustomExceptions.CustomerAlreadyExistsException;
+import com.wissen.customer.CustomExceptions.InValidSignInCredentialsException;
 import com.wissen.customer.Entities.Customer;
+import com.wissen.customer.ReqResModels.CustomerDetailsResponse;
 import com.wissen.customer.ReqResModels.JwtRequest;
 import com.wissen.customer.ReqResModels.JwtResponse;
 import com.wissen.customer.ReqResModels.RegisterResponse;
@@ -53,17 +56,19 @@ public class AuthRestController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> createUser(@RequestBody Customer customer) {
+    public ResponseEntity<CustomerDetailsResponse> createUser(@RequestBody Customer customer) {
+        if(customerService.isCustomerPhoneNumberExists(customer.getPhoneNumber()))
+            throw new CustomerAlreadyExistsException("Customer with this phone number is already registered");
+        if(customer.getPhoneNumber().length() != 10)
+            throw new InValidSignInCredentialsException("Please provide valid phone number");
+        if(!customer.getPhoneNumber().matches("\\d+"))
+            throw new InValidSignInCredentialsException("Please provide valid phone number");
         Customer newUser = customerService.addCustomer(customer);
-        this.doAuthenticate(newUser.getPhoneNumber(), newUser.getPassword());
-        Customer userDetails = customerService.loadUserByPhoneNumber(newUser.getPhoneNumber());
-        String token = this.helper.generateToken(userDetails);
-
-        RegisterResponse response = RegisterResponse.builder()
-                .id(newUser.getCustomerId())
+        CustomerDetailsResponse response = CustomerDetailsResponse.builder()
+                .customerId(newUser.getCustomerId())
                 .name(newUser.getName())
                 .phoneNumber(newUser.getPhoneNumber())
-                .token(token)
+                .address(newUser.getAddress())
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

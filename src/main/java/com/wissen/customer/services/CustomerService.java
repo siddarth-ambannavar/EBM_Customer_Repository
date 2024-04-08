@@ -1,25 +1,40 @@
-package com.wissen.customer.services;
+package com.wissen.customer.Services;
 
-import com.wissen.customer.models.Customer;
+import com.wissen.customer.Entities.Customer;
+import com.wissen.customer.Repositories.CustomerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public interface CustomerService {
+@Service
+public class CustomerService implements UserDetailsService {
 
-    // TODO: JWT Authentication
+    @Autowired
+    private CustomerRepository customerRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    // register user
-    void saveCustomer(Customer customer);
 
-    // get customer details using id
-    Customer getCustomer(int customerId);
+    @Override
+    public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
+        return customerRepository.findByPhoneNumber(phoneNumber).orElse(null);
+    }
 
-    // get list of customers
-    List<Customer> getCustomers();
+    public Customer loadUserByPhoneNumber(String phoneNumber) throws UsernameNotFoundException {
+        return customerRepository.findByPhoneNumber(phoneNumber).orElseThrow();
+    }
 
-    // check if customer exists
-    boolean isCustomerIdExists(int customerId);
+    public List<Customer> getCustomers() {
+        return customerRepository.findAll();
+    }
 
-    // check if phone number already exists
-    boolean isCustomerPhNoExists(String phNo);
+    public Customer addCustomer(Customer customer) {
+        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
+        return customerRepository.save(customer);
+    }
 }

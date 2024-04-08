@@ -1,9 +1,9 @@
-package com.wissen.customer.exceptions;
+package com.wissen.customer.CustomExceptions;
 
-public class UnAuthenticatedAccessException extends RuntimeException {
+public class UnAuthenticatedAccessException extends RuntimeException{
 
     public UnAuthenticatedAccessException() {
-        super("Customer not authenticated!");
+        super("Please login");
     }
 
     public UnAuthenticatedAccessException(String errorMessage) {

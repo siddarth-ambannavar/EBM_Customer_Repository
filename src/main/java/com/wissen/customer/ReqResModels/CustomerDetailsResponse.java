@@ -7,9 +7,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
-public class JwtResponse {
-    private String jwtToken;
+public class CustomerDetailsResponse {
+    private Integer customerId;
     private String name;
     private String phoneNumber;
+    private String address;
 }

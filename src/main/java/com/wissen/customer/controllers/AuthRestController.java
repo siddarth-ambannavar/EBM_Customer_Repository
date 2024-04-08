@@ -37,7 +37,9 @@ public class AuthRestController {
 
         JwtResponse response = JwtResponse.builder()
                 .jwtToken(token)
-                .name(userDetails.getUsername()).build();
+                .name(userDetails.getUsername())
+                .phoneNumber(userDetails.getPhoneNumber())
+                .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

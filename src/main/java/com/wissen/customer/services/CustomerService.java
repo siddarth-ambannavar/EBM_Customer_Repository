@@ -1,5 +1,6 @@
 package com.wissen.customer.Services;
 
+import com.wissen.customer.CustomExceptions.UnAuthenticatedAccessException;
 import com.wissen.customer.Entities.Customer;
 import com.wissen.customer.Repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;

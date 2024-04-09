@@ -1,7 +1,7 @@
 package com.wissen.customer.security;
 
 import com.wissen.customer.entities.Customer;
-import com.wissen.customer.Services.CustomerService;
+import com.wissen.customer.services.CustomerService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;

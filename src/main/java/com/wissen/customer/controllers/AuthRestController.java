@@ -7,7 +7,7 @@ import com.wissen.customer.reqResModels.CustomerDetailsResponse;
 import com.wissen.customer.reqResModels.JwtRequest;
 import com.wissen.customer.reqResModels.JwtResponse;
 import com.wissen.customer.security.JwtHelper;
-import com.wissen.customer.Services.CustomerService;
+import com.wissen.customer.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

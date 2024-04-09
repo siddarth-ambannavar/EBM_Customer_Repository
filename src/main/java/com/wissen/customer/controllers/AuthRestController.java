@@ -1,16 +1,13 @@
-package com.wissen.customer.Controllers;
+package com.wissen.customer.controllers;
 
-import com.wissen.customer.CustomExceptions.CustomerAlreadyExistsException;
-import com.wissen.customer.CustomExceptions.InValidSignInCredentialsException;
-import com.wissen.customer.Entities.Customer;
-import com.wissen.customer.ReqResModels.CustomerDetailsResponse;
-import com.wissen.customer.ReqResModels.JwtRequest;
-import com.wissen.customer.ReqResModels.JwtResponse;
-import com.wissen.customer.ReqResModels.RegisterResponse;
-import com.wissen.customer.Security.JwtHelper;
+import com.wissen.customer.customExceptions.CustomerAlreadyExistsException;
+import com.wissen.customer.customExceptions.InValidSignInCredentialsException;
+import com.wissen.customer.entities.Customer;
+import com.wissen.customer.reqResModels.CustomerDetailsResponse;
+import com.wissen.customer.reqResModels.JwtRequest;
+import com.wissen.customer.reqResModels.JwtResponse;
+import com.wissen.customer.security.JwtHelper;
 import com.wissen.customer.Services.CustomerService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin({"http://localhost:4200"})
 public class AuthRestController {
 
     @Autowired

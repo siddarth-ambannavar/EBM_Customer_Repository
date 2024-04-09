@@ -1,8 +1,8 @@
-package com.wissen.customer.Controllers;
+package com.wissen.customer.controllers;
 
-import com.wissen.customer.Entities.Customer;
-import com.wissen.customer.ReqResModels.CustomerDetailsResponse;
-import com.wissen.customer.Security.JwtHelper;
+import com.wissen.customer.entities.Customer;
+import com.wissen.customer.reqResModels.CustomerDetailsResponse;
+import com.wissen.customer.security.JwtHelper;
 import com.wissen.customer.Services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

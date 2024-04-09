@@ -1,4 +1,4 @@
-package com.wissen.customer.ReqResModels;
+package com.wissen.customer.reqResModels;
 
 import lombok.*;
 import org.springframework.http.HttpStatus;

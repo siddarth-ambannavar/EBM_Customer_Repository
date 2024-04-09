@@ -1,4 +1,4 @@
-package com.wissen.customer.CustomExceptions;
+package com.wissen.customer.customExceptions;
 
 public class InValidSignInCredentialsException extends RuntimeException{
 

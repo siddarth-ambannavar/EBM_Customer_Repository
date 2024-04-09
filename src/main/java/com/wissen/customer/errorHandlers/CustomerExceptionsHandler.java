@@ -1,10 +1,10 @@
-package com.wissen.customer.ErrorHandlers;
+package com.wissen.customer.errorHandlers;
 
-import com.wissen.customer.CustomExceptions.CustomerAlreadyExistsException;
-import com.wissen.customer.CustomExceptions.InValidLoginCredentialsException;
-import com.wissen.customer.CustomExceptions.InValidSignInCredentialsException;
-import com.wissen.customer.CustomExceptions.UnAuthenticatedAccessException;
-import com.wissen.customer.ReqResModels.ErrorResponse;
+import com.wissen.customer.customExceptions.CustomerAlreadyExistsException;
+import com.wissen.customer.customExceptions.InValidLoginCredentialsException;
+import com.wissen.customer.customExceptions.InValidSignInCredentialsException;
+import com.wissen.customer.customExceptions.UnAuthenticatedAccessException;
+import com.wissen.customer.reqResModels.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

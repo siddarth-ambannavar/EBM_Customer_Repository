@@ -1,7 +1,7 @@
-package com.wissen.customer.Configurations;
+package com.wissen.customer.configurations;
 
-import com.wissen.customer.Security.JwtAuthenticationEntryPoint;
-import com.wissen.customer.Security.JwtAuthenticationFilter;
+import com.wissen.customer.security.JwtAuthenticationEntryPoint;
+import com.wissen.customer.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

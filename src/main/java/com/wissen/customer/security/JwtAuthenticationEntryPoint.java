@@ -1,4 +1,4 @@
-package com.wissen.customer.Security;
+package com.wissen.customer.security;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

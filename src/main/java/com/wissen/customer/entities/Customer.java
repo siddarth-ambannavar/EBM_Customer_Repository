@@ -1,4 +1,4 @@
-package com.wissen.customer.Entities;
+package com.wissen.customer.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

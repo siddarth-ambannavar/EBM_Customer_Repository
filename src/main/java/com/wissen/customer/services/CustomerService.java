@@ -1,16 +1,13 @@
-package com.wissen.customer.Services;
+package com.wissen.customer.services;
 
-import com.wissen.customer.CustomExceptions.UnAuthenticatedAccessException;
-import com.wissen.customer.Entities.Customer;
-import com.wissen.customer.Repositories.CustomerRepository;
+import com.wissen.customer.entities.Customer;
+import com.wissen.customer.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class CustomerService implements UserDetailsService {

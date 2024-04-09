@@ -1,4 +1,4 @@
-package com.wissen.customer.ReqResModels;
+package com.wissen.customer.reqResModels;
 
 import lombok.*;
 
@@ -8,9 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @ToString
-public class RegisterResponse {
-    private int id;
+public class JwtResponse {
+    private String jwtToken;
     private String name;
     private String phoneNumber;
-    private String token;
 }

@@ -1,6 +1,6 @@
-package com.wissen.customer.Repositories;
+package com.wissen.customer.repositories;
 
-import com.wissen.customer.Entities.Customer;
+import com.wissen.customer.entities.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

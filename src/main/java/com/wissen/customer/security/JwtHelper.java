@@ -1,6 +1,6 @@
-package com.wissen.customer.Security;
+package com.wissen.customer.security;
 
-import com.wissen.customer.Entities.Customer;
+import com.wissen.customer.entities.Customer;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

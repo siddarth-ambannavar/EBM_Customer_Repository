@@ -1,6 +1,7 @@
 package com.wissen.customer.reqResModels;
 
 import lombok.*;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
@@ -9,7 +10,9 @@ import lombok.*;
 @Builder
 @ToString
 public class JwtResponse {
+    private String message;
+    private final boolean success = true;
+    private HttpStatus status;
     private String jwtToken;
-    private String name;
-    private String phoneNumber;
+    private CustomerDetails customer;
 }

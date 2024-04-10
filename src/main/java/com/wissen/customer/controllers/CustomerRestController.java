@@ -1,7 +1,7 @@
 package com.wissen.customer.controllers;
 
 import com.wissen.customer.entities.Customer;
-import com.wissen.customer.reqResModels.CustomerDetailsResponse;
+import com.wissen.customer.reqResModels.CustomerDetails;
 import com.wissen.customer.security.JwtHelper;
 import com.wissen.customer.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +23,10 @@ public class CustomerRestController {
     private JwtHelper helper;
 
     @GetMapping("/user")
-    public ResponseEntity<CustomerDetailsResponse> getLoggedInUser() {
+    public ResponseEntity<CustomerDetails> getLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Customer customer = (Customer) authentication.getPrincipal();
-        CustomerDetailsResponse response = CustomerDetailsResponse.builder()
+        CustomerDetails response = CustomerDetails.builder()
                 .customerId(customer.getCustomerId())
                 .name(customer.getName())
                 .phoneNumber(customer.getPhoneNumber())

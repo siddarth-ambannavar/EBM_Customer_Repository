@@ -7,13 +7,14 @@ import com.wissen.customer.customExceptions.UnAuthenticatedAccessException;
 import com.wissen.customer.reqResModels.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class CustomerExceptionsHandler {
 
-    @ExceptionHandler(InValidLoginCredentialsException.class)
+    @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> handleInValidLoginCredentialsException(
             InValidLoginCredentialsException exception
     ) {

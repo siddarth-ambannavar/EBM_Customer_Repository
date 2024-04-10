@@ -1,11 +1,13 @@
 package com.wissen.customer.controllers;
 
 import com.wissen.customer.customExceptions.CustomerAlreadyExistsException;
+import com.wissen.customer.customExceptions.InValidLoginCredentialsException;
 import com.wissen.customer.customExceptions.InValidSignInCredentialsException;
 import com.wissen.customer.entities.Customer;
-import com.wissen.customer.reqResModels.CustomerDetailsResponse;
+import com.wissen.customer.reqResModels.CustomerDetails;
 import com.wissen.customer.reqResModels.JwtRequest;
 import com.wissen.customer.reqResModels.JwtResponse;
+import com.wissen.customer.reqResModels.RegisterResponse;
 import com.wissen.customer.security.JwtHelper;
 import com.wissen.customer.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +37,17 @@ public class AuthRestController {
         this.doAuthenticate(request.getPhoneNumber(), request.getPassword());
         Customer userDetails = customerService.loadUserByPhoneNumber(request.getPhoneNumber());
         String token = this.helper.generateToken(userDetails);
-
-        JwtResponse response = JwtResponse.builder()
-                .jwtToken(token)
-                .name(userDetails.getUsername())
+        CustomerDetails loggedInCustomerDetails = CustomerDetails.builder()
+                .customerId(userDetails.getCustomerId())
+                .name(userDetails.getName())
                 .phoneNumber(userDetails.getPhoneNumber())
+                .address(userDetails.getAddress())
+                .build();
+        JwtResponse response = JwtResponse.builder()
+                .message("Customer Logged In Successfully")
+                .status(HttpStatus.OK)
+                .jwtToken(token)
+                .customer(loggedInCustomerDetails)
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -48,27 +56,26 @@ public class AuthRestController {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(phoneNumber, password);
         try {
             manager.authenticate(authentication);
-        } catch (BadCredentialsException e) {
-            throw new BadCredentialsException(" Invalid Username or Password  !!");
+        } catch (InValidLoginCredentialsException e) {
+            throw new InValidLoginCredentialsException(" Invalid Username or Password  !!");
         }
     }
 
     @PostMapping("/register")
-    public ResponseEntity<CustomerDetailsResponse> createUser(@RequestBody Customer customer) {
+    public ResponseEntity<RegisterResponse> createUser(@RequestBody Customer customer) {
         if(customerService.isCustomerPhoneNumberExists(customer.getPhoneNumber()))
             throw new CustomerAlreadyExistsException("Customer with this phone number is already registered");
         if(customer.getPhoneNumber().length() != 10)
             throw new InValidSignInCredentialsException("Please provide valid phone number");
         if(!customer.getPhoneNumber().matches("\\d+"))
             throw new InValidSignInCredentialsException("Please provide valid phone number");
-        Customer newUser = customerService.addCustomer(customer);
-        CustomerDetailsResponse response = CustomerDetailsResponse.builder()
-                .customerId(newUser.getCustomerId())
-                .name(newUser.getName())
-                .phoneNumber(newUser.getPhoneNumber())
-                .address(newUser.getAddress())
+        CustomerDetails customerDetails = customerService.addCustomer(customer);
+        RegisterResponse response = RegisterResponse.builder()
+                .message("Customer Registered Successfully!")
+                .status(HttpStatus.CREATED)
+                .customer(customerDetails)
                 .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @ExceptionHandler(BadCredentialsException.class)

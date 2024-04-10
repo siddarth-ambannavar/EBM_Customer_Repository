@@ -9,14 +9,13 @@ import com.wissen.customer.reqResModels.JwtRequest;
 import com.wissen.customer.reqResModels.JwtResponse;
 import com.wissen.customer.reqResModels.RegisterResponse;
 import com.wissen.customer.security.JwtHelper;
-import com.wissen.customer.services.CustomerService;
+import com.wissen.customer.implementations.CustomerServiceImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,17 +24,20 @@ import org.springframework.web.bind.annotation.*;
 public class AuthRestController {
 
     @Autowired
-    private CustomerService customerService;
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private CustomerServiceImplementation customerServiceImplementation;
+
     @Autowired
     private AuthenticationManager manager;
     @Autowired
     private JwtHelper helper;
+
+
+
+
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request) {
         this.doAuthenticate(request.getPhoneNumber(), request.getPassword());
-        Customer userDetails = customerService.loadUserByPhoneNumber(request.getPhoneNumber());
+        Customer userDetails = customerServiceImplementation.loadUserByPhoneNumber(request.getPhoneNumber());
         String token = this.helper.generateToken(userDetails);
         CustomerDetails loggedInCustomerDetails = CustomerDetails.builder()
                 .customerId(userDetails.getCustomerId())
@@ -63,13 +65,13 @@ public class AuthRestController {
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> createUser(@RequestBody Customer customer) {
-        if(customerService.isCustomerPhoneNumberExists(customer.getPhoneNumber()))
+        if(customerServiceImplementation.isCustomerPhoneNumberExists(customer.getPhoneNumber()))
             throw new CustomerAlreadyExistsException("Customer with this phone number is already registered");
         if(customer.getPhoneNumber().length() != 10)
             throw new InValidSignInCredentialsException("Please provide valid phone number");
         if(!customer.getPhoneNumber().matches("\\d+"))
             throw new InValidSignInCredentialsException("Please provide valid phone number");
-        CustomerDetails customerDetails = customerService.addCustomer(customer);
+        CustomerDetails customerDetails = customerServiceImplementation.addCustomer(customer);
         RegisterResponse response = RegisterResponse.builder()
                 .message("Customer Registered Successfully!")
                 .status(HttpStatus.CREATED)

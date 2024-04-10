@@ -1,7 +1,7 @@
 package com.wissen.customer.security;
 
 import com.wissen.customer.entities.Customer;
-import com.wissen.customer.services.CustomerService;
+import com.wissen.customer.implementations.CustomerServiceImplementation;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -26,10 +25,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final Logger logger = LoggerFactory.getLogger(OncePerRequestFilter.class);
     @Autowired
     private JwtHelper jwtHelper;
+//    @Autowired
+//    private UserDetailsService userDetailsService;
     @Autowired
-    private UserDetailsService userDetailsService;
-    @Autowired
-    private CustomerService customerService;
+    private CustomerServiceImplementation customerServiceImplementation;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -59,7 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             logger.info("Invalid Header Value !! ");
 
         if (phoneNumber != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            Customer customerDetails = this.customerService.loadUserByPhoneNumber(phoneNumber);
+            Customer customerDetails = this.customerServiceImplementation.loadUserByPhoneNumber(phoneNumber);
             logger.info(customerDetails.getUsername());
             Boolean validateToken = this.jwtHelper.validateToken(token, customerDetails);
             if (validateToken) {

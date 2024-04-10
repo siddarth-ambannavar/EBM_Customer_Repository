@@ -1,8 +1,10 @@
-package com.wissen.customer.services;
+package com.wissen.customer.implementations;
 
+import com.wissen.customer.customExceptions.InValidSignInCredentialsException;
 import com.wissen.customer.entities.Customer;
 import com.wissen.customer.repositories.CustomerRepository;
 import com.wissen.customer.reqResModels.CustomerDetails;
+import com.wissen.customer.services.CustService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CustomerService implements UserDetailsService {
+public class CustomerServiceImplementation implements CustService, UserDetailsService {
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -19,23 +21,23 @@ public class CustomerService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
 
-    @Override
-    public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
-        return customerRepository.findByPhoneNumber(phoneNumber).orElse(null);
-    }
 
+
+    @Override
     public Customer loadUserByPhoneNumber(String phoneNumber) throws UsernameNotFoundException {
         return customerRepository.findByPhoneNumber(phoneNumber).orElseThrow();
     }
 
-    public boolean isCustomerIdExists(Integer customerId) {
-        return customerRepository.existsById(customerId);
+    @Override
+    public boolean isCustomerPhoneNumberExists() {
+        return false;
     }
 
+    @Override
     public boolean isCustomerPhoneNumberExists(String phoneNumber) {
         return customerRepository.findByPhoneNumber(phoneNumber).isPresent();
     }
-
+    @Override
     public CustomerDetails addCustomer(Customer customer) {
         customer.setPassword(passwordEncoder.encode(customer.getPassword()));
         Customer newCustomer = customerRepository.save(customer);
@@ -45,5 +47,10 @@ public class CustomerService implements UserDetailsService {
                 .phoneNumber(newCustomer.getPhoneNumber())
                 .address(newCustomer.getAddress())
                 .build();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
+        return customerRepository.findByPhoneNumber(phoneNumber).orElse(null);
     }
 }

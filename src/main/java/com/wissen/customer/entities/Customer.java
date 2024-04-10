@@ -54,4 +54,5 @@ public class Customer implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

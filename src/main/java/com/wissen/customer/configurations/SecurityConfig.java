@@ -21,10 +21,13 @@ public class SecurityConfig {
 
     @Autowired
     private JwtAuthenticationEntryPoint point;
+
     @Autowired
     private JwtAuthenticationFilter filter;
+
     @Autowired
     private UserDetailsService userDetailsService;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 

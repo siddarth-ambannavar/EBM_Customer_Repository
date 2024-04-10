@@ -3,7 +3,7 @@ package com.wissen.customer.controllers;
 import com.wissen.customer.entities.Customer;
 import com.wissen.customer.reqResModels.CustomerDetails;
 import com.wissen.customer.security.JwtHelper;
-import com.wissen.customer.services.CustomerService;
+import com.wissen.customer.implementations.CustomerServiceImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CustomerRestController {
 
     @Autowired
-    private CustomerService customerService;
+    private CustomerServiceImplementation customerServiceImplementation;
     @Autowired
     private JwtHelper helper;
 

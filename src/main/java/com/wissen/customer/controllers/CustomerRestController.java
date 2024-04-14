@@ -78,8 +78,10 @@ public class CustomerRestController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Customer customer = (Customer) authentication.getPrincipal();
         int id = customer.getCustomerId();
-//        String deleteMeterMsg = meterService.removeCustomerMeters(id);
-//        log.info(deleteMeterMsg);
+        log.info(" ========== Customer ID: {}", id);
+        String deleteMeterMsg = meterService.removeCustomerMeters(id);
+        log.info("Meters and Usages Deleted");
+        log.info(deleteMeterMsg);
         log.info("Customer Delete : {}", customer.getName());
         return customerServiceImplementation.removeCustomer(id);
     }

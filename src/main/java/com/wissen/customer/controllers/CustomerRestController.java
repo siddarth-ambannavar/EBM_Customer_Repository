@@ -2,6 +2,7 @@ package com.wissen.customer.controllers;
 
 import com.wissen.customer.customExceptions.CustomerAlreadyExistsException;
 import com.wissen.customer.entities.Customer;
+import com.wissen.customer.externals.MeterService;
 import com.wissen.customer.reqResModels.CustomerDetails;
 import com.wissen.customer.security.JwtHelper;
 import com.wissen.customer.implementations.CustomerServiceImplementation;
@@ -26,6 +27,8 @@ public class CustomerRestController {
     private CustomerServiceImplementation customerServiceImplementation;
     @Autowired
     private JwtHelper helper;
+    @Autowired
+    private MeterService meterService;
 
     @GetMapping
     public ResponseEntity<List<Customer>> getAllCustomers() {
@@ -75,6 +78,8 @@ public class CustomerRestController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Customer customer = (Customer) authentication.getPrincipal();
         int id = customer.getCustomerId();
+//        String deleteMeterMsg = meterService.removeCustomerMeters(id);
+//        log.info(deleteMeterMsg);
         log.info("Customer Delete : {}", customer.getName());
         return customerServiceImplementation.removeCustomer(id);
     }

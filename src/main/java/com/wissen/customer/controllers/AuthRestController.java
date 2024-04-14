@@ -4,35 +4,33 @@ import com.wissen.customer.customExceptions.CustomerAlreadyExistsException;
 import com.wissen.customer.customExceptions.InValidLoginCredentialsException;
 import com.wissen.customer.customExceptions.InValidSignInCredentialsException;
 import com.wissen.customer.entities.Customer;
+import com.wissen.customer.implementations.CustomerServiceImplementation;
 import com.wissen.customer.reqResModels.CustomerDetails;
 import com.wissen.customer.reqResModels.JwtRequest;
 import com.wissen.customer.reqResModels.JwtResponse;
 import com.wissen.customer.reqResModels.RegisterResponse;
 import com.wissen.customer.security.JwtHelper;
-import com.wissen.customer.implementations.CustomerServiceImplementation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@Slf4j
 @CrossOrigin({"http://localhost:4200"})
 public class AuthRestController {
 
     @Autowired
     private CustomerServiceImplementation customerServiceImplementation;
-
     @Autowired
     private AuthenticationManager manager;
     @Autowired
     private JwtHelper helper;
-
-
-
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request) {
@@ -51,6 +49,7 @@ public class AuthRestController {
                 .jwtToken(token)
                 .customer(loggedInCustomerDetails)
                 .build();
+        log.info("Customer Logged In : {}", loggedInCustomerDetails.getName());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -59,10 +58,12 @@ public class AuthRestController {
         try {
             manager.authenticate(authentication);
         } catch (InValidLoginCredentialsException e) {
+            log.error("Invalid Credentials");
             throw new InValidLoginCredentialsException(" Invalid Username or Password  !!");
         }
     }
 
+    @Transactional
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> createUser(@RequestBody Customer customer) {
         if(customerServiceImplementation.isCustomerPhoneNumberExists(customer.getPhoneNumber()))
@@ -77,11 +78,7 @@ public class AuthRestController {
                 .status(HttpStatus.CREATED)
                 .customer(customerDetails)
                 .build();
+        log.info("Customer Registered : {}", customerDetails.getName());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    public String exceptionHandler() {
-        return "Credentials Invalid !!";
     }
 }

@@ -5,6 +5,7 @@ import com.wissen.customer.reqResModels.ErrorResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
+@Slf4j
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -27,6 +29,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                         .status(HttpStatus.UNAUTHORIZED)
                         .build();
         ResponseEntity<ErrorResponse> res = new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+        log.error("Unauthorized Access");
         objectMapper.writeValue(response.getWriter(), res.getBody());
     }
 }

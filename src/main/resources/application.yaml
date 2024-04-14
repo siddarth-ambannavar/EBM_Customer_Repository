@@ -11,6 +11,12 @@ spring:
       ddl-auto: create-drop
     show-sql: true
 
+logging:
+  level:
+    com:
+      wissen:
+        customer: DEBUG
+
 server:
   port: 8082
 

@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CustomerServiceImplementation implements CustService, UserDetailsService {
 
@@ -20,8 +22,10 @@ public class CustomerServiceImplementation implements CustService, UserDetailsSe
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
-
+    @Override
+    public List<Customer> retrieveAllCustomer() {
+        return customerRepository.findAll();
+    }
 
     @Override
     public Customer loadUserByPhoneNumber(String phoneNumber) throws UsernameNotFoundException {
@@ -47,6 +51,24 @@ public class CustomerServiceImplementation implements CustService, UserDetailsSe
                 .phoneNumber(newCustomer.getPhoneNumber())
                 .address(newCustomer.getAddress())
                 .build();
+    }
+
+    @Override
+    public CustomerDetails updateCustomer(Customer customer) {
+        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
+        Customer updatedCustomer = customerRepository.save(customer);
+        return CustomerDetails.builder()
+                .customerId(updatedCustomer.getCustomerId())
+                .name(updatedCustomer.getName())
+                .phoneNumber(updatedCustomer.getPhoneNumber())
+                .address(updatedCustomer.getAddress())
+                .build();
+    }
+
+    @Override
+    public String removeCustomer(int id) {
+        customerRepository.deleteById(id);
+        return "Customer Deleted Successfully!";
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.wissen.customer.security;
 
+import com.wissen.customer.customExceptions.InValidLoginCredentialsException;
 import com.wissen.customer.entities.Customer;
 import com.wissen.customer.implementations.CustomerServiceImplementation;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -25,23 +26,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final Logger logger = LoggerFactory.getLogger(OncePerRequestFilter.class);
     @Autowired
     private JwtHelper jwtHelper;
-//    @Autowired
-//    private UserDetailsService userDetailsService;
     @Autowired
     private CustomerServiceImplementation customerServiceImplementation;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestHeader = request.getHeader("Authorization");
-        logger.info(" Header :  {}", requestHeader);
         String phoneNumber = null;
         String token = null;
         if (requestHeader != null && requestHeader.startsWith("Bearer")) {
             token = requestHeader.substring(7);
-            logger.info(" Correct Header Token: {} ", token);
             try {
                 phoneNumber = this.jwtHelper.getUsernameFromToken(token);
-                logger.info(" Phone number: {} ", phoneNumber);
             } catch (IllegalArgumentException e) {
                 logger.info("Illegal Argument while fetching the username !!");
                 logger.error(e.getMessage());
@@ -57,6 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } else
             logger.info("Invalid Header Value !! ");
 
+
         if (phoneNumber != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             Customer customerDetails = this.customerServiceImplementation.loadUserByPhoneNumber(phoneNumber);
             logger.info(customerDetails.getUsername());
@@ -65,8 +62,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(customerDetails, null, customerDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            } else
+            } else {
                 logger.info("Validation fails !!");
+                throw new InValidLoginCredentialsException("Customer Not Found");
+            }
+
         }
         filterChain.doFilter(request, response);
     }

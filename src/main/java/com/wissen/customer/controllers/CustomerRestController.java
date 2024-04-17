@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/customers")
@@ -29,13 +30,6 @@ public class CustomerRestController {
     private JwtHelper helper;
     @Autowired
     private MeterService meterService;
-
-    @GetMapping
-    public ResponseEntity<List<Customer>> getAllCustomers() {
-        log.info("List of All Customers (ADMIN)");
-        List<Customer> customers = customerServiceImplementation.retrieveAllCustomer();
-        return new ResponseEntity<>(customers, HttpStatus.OK);
-    }
 
     @GetMapping("/user")
     public ResponseEntity<CustomerDetails> getLoggedInUser() {
@@ -53,7 +47,9 @@ public class CustomerRestController {
 
     @GetMapping("/get-id")
     public Integer getCustomerId(@RequestHeader("Authorization") String token) {
+        log.info("Controller =========");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("Success ???");
         Customer customer = (Customer) authentication.getPrincipal();
         log.info("User id: {}", customer.getCustomerId());
         return customer.getCustomerId();
@@ -64,9 +60,13 @@ public class CustomerRestController {
     public ResponseEntity<CustomerDetails> updateCustomerProfile(@RequestHeader("Authorization") String token, @RequestBody Customer customer) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Customer oldCustomer = (Customer) authentication.getPrincipal();
-        customer.setCustomerId(oldCustomer.getCustomerId());
-        if(customerServiceImplementation.isCustomerPhoneNumberExists(customer.getPhoneNumber()))
+        if(
+                !Objects.equals(oldCustomer.getPhoneNumber(), customer.getPhoneNumber()) &&
+                customerServiceImplementation.isCustomerPhoneNumberExists(customer.getPhoneNumber())
+        )
             throw new CustomerAlreadyExistsException("Please provide a new phone number");
+        customer.setCustomerId(oldCustomer.getCustomerId());
+        customer.setPassword(oldCustomer.getPassword());
         CustomerDetails updatedCustomer = customerServiceImplementation.updateCustomer(customer);
         log.info("Customer Profile Updated: {}", updatedCustomer.getName());
         return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
@@ -78,11 +78,9 @@ public class CustomerRestController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Customer customer = (Customer) authentication.getPrincipal();
         int id = customer.getCustomerId();
-        log.info(" ========== Customer ID: {}", id);
-        String deleteMeterMsg = meterService.removeCustomerMeters(id);
-        log.info("Meters and Usages Deleted");
-        log.info(deleteMeterMsg);
-        log.info("Customer Delete : {}", customer.getName());
+        meterService.removeCustomerMeters(id);
+        log.info("Meters and Usages Related to " +  customer.getName() + " Deleted!");
+        log.info("Customer Deleted : {}", customer.getName());
         return customerServiceImplementation.removeCustomer(id);
     }
 }

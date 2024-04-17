@@ -1,6 +1,6 @@
 package com.wissen.customer.implementations;
 
-import com.wissen.customer.customExceptions.InValidSignInCredentialsException;
+import com.wissen.customer.customExceptions.InValidLoginCredentialsException;
 import com.wissen.customer.entities.Customer;
 import com.wissen.customer.repositories.CustomerRepository;
 import com.wissen.customer.reqResModels.CustomerDetails;
@@ -29,7 +29,9 @@ public class CustomerServiceImplementation implements CustService, UserDetailsSe
 
     @Override
     public Customer loadUserByPhoneNumber(String phoneNumber) throws UsernameNotFoundException {
-        return customerRepository.findByPhoneNumber(phoneNumber).orElseThrow();
+        return customerRepository.findByPhoneNumber(phoneNumber).orElseThrow(() -> {
+            return new InValidLoginCredentialsException("Customer Not Found");
+        });
     }
 
     @Override
@@ -55,7 +57,6 @@ public class CustomerServiceImplementation implements CustService, UserDetailsSe
 
     @Override
     public CustomerDetails updateCustomer(Customer customer) {
-        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
         Customer updatedCustomer = customerRepository.save(customer);
         return CustomerDetails.builder()
                 .customerId(updatedCustomer.getCustomerId())
